@@ -11,82 +11,230 @@ global.bruhdash = {
 
   // returns the first element of an array
   first: function (array) {
-      return array.shift();
+    return array[0];
+      //return array.shift();
   },
 
   // returns the last element of an array
   last: function (array) {
-    return array.pop();
+    return array[array.length-1];
+    //return array.pop();
   },
 
   // returns the index of the first matching element from left to right
   indexOf: function (array, number) {
-    return array.findIndex(x => x === number);
+
+    for(i = 0; i < array.length; i++){
+      if(number === array[i]) {
+        return i;
+      }
+
+    }
+    return -1;
+
+    //return array.findIndex(x => x === number);
   },
 
   // returns the index of the first matching element from right to left
   lastIndexOf: function (array, number) {
-    return array.lastIndexOf(number);
+    
+    for(i = (array.length-1); i > -1; i--){
+      if(number === array[i]) {
+        return i;
+      }
+    }
+    return -1;
+    
+    //return array.lastIndexOf(number);
   },
 
   // returns an array with all elements except for the last element
   initial: function (array) {
-    array.pop()
-    return array;
+    var firstArr = new Array(array.length-1);
+
+    for(i = 0; i < array.length-1; i++){
+      firstArr[i] = array[i];
+    }
+    return firstArr;
   },
   
   // returns an array with all falsey values removed
   compact: function(array) {
-    return array.filter(x => x > 0);
+
+    var count = 0;
+    for (i = 0; i < array.length; i++){
+      if(array[i]>0) {
+        count++;
+      }
+    }
+
+    var compArr = new Array(count);
+    var index = 0;
+
+    for (i = 0; i < array.length; i++) {
+      if(array[i]>0){
+        compArr[index] = array[i];
+        index++;
+      }
+    }
+
+    return compArr;
+    //return array.filter(x => x > 0);
   },
 
   // creates a slice of an array from the start index up to but not including the end index
   slice: function (array, start, end) {
-    return array.slice(start, end);
+
+    var sliceArr = new Array(end - start);
+    var index = 0;
+
+    for (i = start; i < end; i++) {
+      sliceArr[index] = array[i];
+      index++;
+    }
+    
+    return sliceArr;
+    //return array.slice(start, end);
   },
 
   // returns a slice of array with n elements dropped from the beignning
   drop: function(array, number){
+
     if (number > 0) {
-      return array.slice(number,array.length);
+      var sliceArr = new Array(array.length - number);
+      var index = 0;
+  
+      for (i = number; i < array.length; i++) {
+        sliceArr[index] = array[i];
+        index++;
+      }
+      
+      return sliceArr;
+
     } else if (number === 0){
       return array;
     } else {
-      return array.slice(1,array.length);
+
+      var sliceArr = new Array(array.length - 1);
+      var index = 0;
+  
+      for (i = 1; i < array.length; i++) {
+        sliceArr[index] = array[i];
+        index++;
+      }
+      
+      return sliceArr;
+      
     }
+
+    // if (number > 0) {
+    //   return array.slice(number,array.length);
+    // } else if (number === 0){
+    //   return array;
+    // } else {
+    //   return array.slice(1,array.length);
+    // }
   },
 
   // returns a slice of array with n elements dropped from the end
   dropRight: function(array, number) {
+
     if (number > 0) {
-      return array.slice(0,array.length-number);
+      var sliceArr = new Array(array.length - number);
+      var index = 0;
+  
+      for (i = 0; i < array.length - number; i++) {
+        sliceArr[index] = array[i];
+        index++;
+      }
+      
+      return sliceArr;
+
     } else if (number === 0){
       return array;
     } else {
-      return array.slice(0,array.length-1);
+
+      var sliceArr = new Array(array.length - 1);
+      var index = 0;
+  
+      for (i = 0; i < array.length - 1; i++) {
+        sliceArr[index] = array[i];
+        index++;
+      }
+      
+      return sliceArr;
+      
     }
+
+    // if (number > 0) {
+    //   return array.slice(0,array.length-number);
+    // } else if (number === 0){
+    //   return array;
+    // } else {
+    //   return array.slice(0,array.length-1);
+    // }
   },
 
   // creates a slice of an array with n elements taken from the beginning
   take: function (array, number) {
-    if(number > 0) {
-      return array.slice(0,number);
+
+    if (number > 0 && array.length > number) {
+      var sliceArr = new Array(number);
+      var index = 0;
+  
+      for (i = 0; i < number; i++) {
+        sliceArr[index] = array[i];
+        index++;
+      }
+      
+      return sliceArr;
+
     } else if (number === 0){
       return [];
+    } else if (number > array.length) {
+      return array;
     } else {
-      return array.slice(0,1);
+      return [array[0]];
     }
+
+    // if(number > 0) {
+    //   return array.slice(0,number);
+    // } else if (number === 0){
+    //   return [];
+    // } else {
+    //   return array.slice(0,1);
+    // }
   },
 
   // creates a slice of an array with n elements taken from the end
   takeRight: function (array, number) {
-    if(number > 0) {
-      return array.slice(array.length - number,array.length);
+
+    if (number > 0 && array.length > number) {
+      var sliceArr = new Array(array.length - number);
+      var index = 0;
+  
+      for (i = number-1; i < array.length; i++) {
+        sliceArr[index] = array[i];
+        index++;
+      }
+      
+      return sliceArr;
+
     } else if (number === 0){
       return [];
+    } else if (number > array.length) {
+      return array;
     } else {
-      return array.slice(array.length-1,array.length);
+      return [array[array.length-1]];
     }
+
+    // if(number > 0) {
+    //   return array.slice(array.length - number,array.length);
+    // } else if (number === 0){
+    //   return [];
+    // } else {
+    //   return array.slice(array.length-1,array.length);
+    // }
   },
 
   // fills elements of array with specified value from the start index
@@ -186,11 +334,32 @@ global.bruhdash = {
   // Note: this should work for arrays and objects
   forEach: function(collection, func) {
 
-    if (collection instanceof Array){
-      return collection.map(func);
+    if (collection instanceof Array) {
+
+      var forArr = [];
+
+      for (i = 0; i < collection.length; i++) {
+        forArr.push(func(collection[i]));
+      }
+
+      return forArr;
     } else {
-      return Object.values(collection).map(func);
+
+      var tempArr = Object.values(collection);
+      var forObj = [];
+
+      for (i = 0; i < tempArr.length; i++) {
+        forObj.push(func(tempArr[i]));
+      }
+      
+      return forObj;
     }
+
+    // if (collection instanceof Array){
+    //   return collection.map(func);
+    // } else {
+    //   return Object.values(collection).map(func);
+    // }
 
   },
 
@@ -198,11 +367,33 @@ global.bruhdash = {
   // Note: this should work for arrays and objects
   map: function(collection, func) {
 
-    if (collection instanceof Array){
-      return collection.map(func);
+    if (collection instanceof Array) {
+
+      var mapArr = [];
+
+      for (i = 0; i < collection.length; i++) {
+        mapArr.push(func(collection[i]));
+      }
+
+      return mapArr;
     } else {
-      return Object.values(collection).map(func);
+
+      var tempArr = Object.values(collection);
+      var mapObj = [];
+
+      for (i = 0; i < tempArr.length; i++) {
+        mapObj.push(func(tempArr[i]));
+      }
+      
+      return mapObj;
     }
+
+    // if (collection instanceof Array){
+    //   return collection.map(func);
+    // } else {
+    //   return Object.values(collection).map(func);
+    // }
+
   },
 
   /*************************
