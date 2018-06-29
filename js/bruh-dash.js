@@ -240,41 +240,142 @@ global.bruhdash = {
   // fills elements of array with specified value from the start index
   // up to but not including the end index
   fill: function(array, number, start, end) {
-    return array.fill(number,start,end);
+    if (start >= 0 && end >= 0){
+      for (i = start; i < end; i++){
+        array[i] = number;
+      }
+  
+      return array;
+    } else {
+      for (i = 0; i < array.length; i++){
+        array[i] = number;
+      }
+      return array;
+    }
+
+    //return array.fill(number,start,end);
   },
 
   // removes all given values from an array
   pull: function (array, ...removeElement) {
-    var processedArr = array.splice(0,array.length);
-    for (i = 0; i < removeElement.length; i++){
-      processedArr = processedArr.filter(x => x !== removeElement[i]);
+    var length =  array.length;
+    if (removeElement.length < 1) {
+      return array;
     }
+
+    for (i = 0; i < array.length; i ++){
+      for (j = 0; j < removeElement.length; j++) {
+        if (array[i] === removeElement[j]){
+          length --;
+          array [i] = 'Delete';
+        }
+      }
+    }
+
+    var processedArr = new Array (length);
+    var index = 0;
+    for (i = 0; i < array.length; i ++) {
+      if (array[i] !== 'Delete'){
+        processedArr[index] = array[i];
+        index ++;
+      }
+
+    }
+
     return processedArr;
+    // var processedArr = array.splice(0,array.length);
+    // for (i = 0; i < removeElement.length; i++){
+    //   processedArr = processedArr.filter(x => x !== removeElement[i]);
+    // }
+    // return processedArr;
   },
 
   // removes elements of an array corresponding to the given indices
   pullAt: function (array, index) {
-    var result = [];
-    index.forEach(x => result.push(array[x]));
+    var result = new Array (index.length);
+    var sort = index.sort();
+
+    var inx = 0;
+    for (i = 0; i < array.length; i++) {
+      if (i === sort[inx]){
+        result[inx] = array[i];
+        inx++;
+      }
+    }
+
     return result;
+
+    // var result = [];
+
+    // index.forEach(x => result.push(array[x]));
+    // return result;
   },
 
   // creates an array excluding all the specified values
   without: function(array, ...removeElement) {
-    var processedArr = array.splice(0,array.length);
-    for (i = 0; i < removeElement.length; i++){
-      processedArr = processedArr.filter(x => x !== removeElement[i]);
+    var result;
+    var inx = 0;
+    var length = array.length;
+
+    for (i = 0; i < array.length; i++) {
+      for (j = 0; j < removeElement.length; j++) {
+        if (array[i] === removeElement[j]){
+          array[i] = 'DELETE';
+          length--;
+        }
+      }
+
     }
-    return processedArr;
+
+    result = new Array(length);
+
+    for (i = 0; i < array.length; i++){
+      if(array[i] !== 'DELETE'){
+        result[inx] = array[i];
+        inx++;
+      }
+    }
+    return result;
+
+    // var processedArr = array.splice(0,array.length);
+    // for (i = 0; i < removeElement.length; i++){
+    //   processedArr = processedArr.filter(x => x !== removeElement[i]);
+    // }
+    // return processedArr;
   },
 
   // returns an array with specified values excluded
+
   difference: function(array1, array2) {
-    var difference = array1.slice(0,array1.length);
-    array2.forEach(x => {
-      difference = difference.filter(y => y !== x);
-    });
-    return difference;
+    var result;
+    var inx = 0;
+    var length = array1.length;
+
+    for (i = 0; i < array1.length; i++) {
+      for (j = 0; j < array2.length; j++) {
+        if (array1[i] === array2[j]){
+          array1[i] = 'DELETE';
+          length--;
+        }
+      }
+
+    }
+    console.log(array1[i])
+    result = new Array(length);
+
+    for (i = 0; i < array1.length; i++){
+      if(array1[i] !== 'DELETE'){
+        result[inx] = array1[i];
+        inx++;
+      }
+    }
+
+    return result;
+    // var difference = array1.slice(0,array1.length);
+    // array2.forEach(x => {
+    //   difference = difference.filter(y => y !== x);
+    // });
+    // return difference;
   },
 
   /*******************
@@ -285,7 +386,8 @@ global.bruhdash = {
   zip: function (array1, array2) {
     var zipArr = [];
     for(i = 0; i < array1.length; i++){
-      zipArr.push([array1[i],array2[i]]);
+      zipArr[i] = [array1[i],array2[i]];
+      // zipArr.push([array1[i],array2[i]]);
     }
     return zipArr;
   },
@@ -295,35 +397,49 @@ global.bruhdash = {
     var zip1 = [];
     var zip2 = [];
 
-    array.forEach(x => {
-      zip1.push(x[0]);
-      zip2.push(x[1]);
-    });
+    for(i = 0; i < array.length; i++) {
+      zip1[i] = array[i][0];
+      zip2[i] = array[i][1];
+    }
+    // array.forEach(x => {
+    //   zip1.push(x[0]);
+    //   zip2.push(x[1]);
+    // });
 
     return [zip1,zip2];
   },
 
   // creates an array of elements into groups of length of specified size
   chunk: function(array, chunk){
-    console.log(array);
+    // console.log(array);
+    var currIndex = 0;
+    var chunkIndex = 0;
     var chunks = [];
     if(chunk >= array.length && array.length > 0){
       return [array];
     } else if (chunk === 0 || array.length === 0) {
       return [];
     } else {
-        var tempArr = [];
+        var tempArr = new Array();
         var length = array.length;
         for(i = 1; i < length+1; i++){
-          tempArr.push(array.shift());
-          console.log(i%chunk + " " + i);
+          tempArr[currIndex] = array[i-1];
+          currIndex++;
+          // tempArr.push(array.shift());
+          // console.log(i%chunk + " " + i);
           if (i%chunk === 0 ) {
-            chunks.push(tempArr);
+            chunks[chunkIndex] = tempArr;
+            // chunks.push(tempArr);
+            chunkIndex++;
             tempArr = [];
+            currIndex = 0;
           }
         }
         if (tempArr !== []){
-           chunks.push(tempArr);
+          chunks[chunkIndex] = tempArr;
+          chunkIndex++;
+          //  chunks.push(tempArr);
+           currIndex = 0;
         }
 
         return chunks;
@@ -339,7 +455,8 @@ global.bruhdash = {
       var forArr = [];
 
       for (i = 0; i < collection.length; i++) {
-        forArr.push(func(collection[i]));
+        forArr[i] = func(collection[i]);
+        // forArr.push(func(collection[i]));
       }
 
       return forArr;
@@ -349,7 +466,8 @@ global.bruhdash = {
       var forObj = [];
 
       for (i = 0; i < tempArr.length; i++) {
-        forObj.push(func(tempArr[i]));
+        forObj[i] = func(tempArr[i]);
+        // forObj.push(func(tempArr[i]));
       }
       
       return forObj;
@@ -372,7 +490,8 @@ global.bruhdash = {
       var mapArr = [];
 
       for (i = 0; i < collection.length; i++) {
-        mapArr.push(func(collection[i]));
+        mapArr[i] = func(collection[i]);
+        // mapArr.push(func(collection[i]));
       }
 
       return mapArr;
@@ -382,7 +501,8 @@ global.bruhdash = {
       var mapObj = [];
 
       for (i = 0; i < tempArr.length; i++) {
-        mapObj.push(func(tempArr[i]));
+        mapObj[i] = func(tempArr[i]);
+        // mapObj.push(func(tempArr[i]));
       }
       
       return mapObj;
@@ -403,11 +523,40 @@ global.bruhdash = {
   // iterates over elements of a collection and returns all elements that the predicate returns truthy for
   // Note: this should work for arrays and objects
   filter: function(collection, predicate) {
+    var currIndex = 0;
+    var truthyElements = []; 
 
     if (collection instanceof Array){
-      return collection.filter(predicate);
+      console.log(collection);
+      for (i = 0; i < collection.length; i++){
+          if(predicate(collection[i])) {
+            truthyElements[currIndex] = collection[i];
+            currIndex++;
+          }
+      }
+      return truthyElements;
+      // return collection.filter(predicate);
     } else {
-      return Object.values(collection).filter(predicate);
+      // var objArr = Object.values(collection);
+      var objArr = [];
+      var index = 0;
+    
+      for (x in collection){
+        objArr[index] = collection[x];
+        index++;
+      }
+
+      console.log(objArr);
+
+      for (i = 0; i < objArr.length; i++){
+        if(predicate(objArr[i])) {
+          truthyElements[currIndex] = objArr[i];
+          currIndex++;
+        }
+      }
+
+      return truthyElements;
+      // return Object.values(collection).filter(predicate);
     }
   },
 
@@ -415,10 +564,20 @@ global.bruhdash = {
   // in the collection through an iteratee
   // Note: this should work for arrays and objects
   reduce: function(collection, accumulator) {
+    var result = 0;
     if (collection instanceof Array){
-      return collection.reduce(accumulator);
+      console.log(collection + " " + accumulator);
+      for(i = 0; i < collection.length; i++){
+        result = accumulator(result,collection[i]);
+      }
+      // return collection.reduce(accumulator);
+      return result;
     } else {
-      return Object.values(collection).reduce(accumulator);
+      for(x in collection) {
+        result = accumulator(result,collection[x]);
+      }
+      return result;
+      // return Object.values(collection).reduce(accumulator);
     }
   }
 };
